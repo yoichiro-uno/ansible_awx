@@ -1,0 +1,21 @@
+---
+- name: upgrade all packages
+  yum:
+    name: '*'
+    state: latest
+
+- name: Install dependencies
+  yum:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - git
+    - python-docker-py
+
+- name: Clone from git hub
+  git: 
+    repo: 'http://github.com/ansible/awx.git'
+    dest: /data/awx
+
+- name: Install Ansible AWX
+  shell: bash -lc "cd /data/awx/installer;ansible-playbook -i inventory install.yml"
